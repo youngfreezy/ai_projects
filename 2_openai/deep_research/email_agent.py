@@ -7,11 +7,14 @@ from agents import Agent, function_tool
 
 
 @function_tool
-def send_email(subject: str, html_body: str) -> Dict[str, str]:
+def send_email(subject: str, html_body: str, from_email_addr: str = "", to_email_addr: str = "") -> Dict[str, str]:
     """Send an email with the given subject and HTML body"""
     sg = sendgrid.SendGridAPIClient(api_key=os.environ.get("SENDGRID_API_KEY"))
-    from_email = Email("fareez.ahmed@gmail.com")  # put your verified sender here
-    to_email = To("fareez.ahmed@gmail.com")  # put your recipient here
+    # Use provided emails or fall back to defaults
+    from_addr = from_email_addr if from_email_addr else "fareez.ahmed@gmail.com"
+    to_addr = to_email_addr if to_email_addr else "fareez.ahmed@gmail.com"
+    from_email = Email(from_addr)
+    to_email = To(to_addr)
     content = Content("text/html", html_body)
     mail = Mail(from_email, to_email, subject, content).get()
     response = sg.client.mail.send.post(request_body=mail)
@@ -20,8 +23,13 @@ def send_email(subject: str, html_body: str) -> Dict[str, str]:
 
 
 INSTRUCTIONS = """You are able to send a nicely formatted HTML email based on a detailed report.
-You will be provided with a detailed report. You should use your tool to send one email, providing the 
-report converted into clean, well presented HTML with an appropriate subject line."""
+You will be provided with a dictionary containing:
+- content: The report content to be sent
+- from_email: The sender's email address (use if provided)
+- to_email: The recipient's email address (use if provided)
+
+You should use your tool to send one email, providing the report converted into clean, well presented HTML 
+with an appropriate subject line. Pass the from_email and to_email values to the send_email function if they are provided."""
 
 email_agent = Agent(
     name="Email agent",

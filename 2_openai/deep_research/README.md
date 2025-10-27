@@ -1,15 +1,6 @@
 ---
-title: deep-research
-app_file: app.py
+title: deep_research
+app_file: deep_research.py
 sdk: gradio
-sdk_version: 3.50.2
+sdk_version: 5.34.2
 ---
-
-# Deep Research Agent
-
-This is an AI-powered research assistant that can perform deep research on any topic. It uses a combination of agents to:
-
-1. Plan multiple search queries
-2. Execute searches in parallel
-3. Write a comprehensive report
-4. Send the report via email

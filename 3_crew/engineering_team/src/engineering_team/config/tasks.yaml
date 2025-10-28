@@ -51,25 +51,38 @@ test_task:
 
 deployment_task:
   description: >
-    Create all necessary files for deploying the Gradio app to Hugging Face Spaces.
-    This includes: requirements.txt, README.md, app.py deployment wrapper, and any other configuration files needed.
-    The deployment should allow the app to run on Hugging Face Spaces after successful local testing with 'uv run app.py'.
+    Create all necessary files for deploying the Gradio app to Hugging Face Spaces AND automatically deploy it.
+    This includes: requirements.txt, README.md, app.py deployment wrapper.
+    IMPORTANT: 
+    1. Read authentication secrets from the .env file in the project root (HF_TOKEN, etc.)
+    2. Use the Hugging Face API to automatically create a new Space and deploy the app
+    3. The deployment should be fully automated - create a new HuggingFace Space, upload the files, and return the deployed URL
+    4. Use the huggingface_hub library for automatic deployment
+    5. Load environment variables from .env file before deploying
   expected_output: >
-    All deployment files needed for Hugging Face Spaces including requirements.txt, README.md, and app.py wrapper.
+    All deployment files AND the deployed Hugging Face Space URL. The output should include: deployment files location and the live URL to the deployed space.
   agent: deployment_engineer
   context:
     - frontend_task
-  output_file: output/deployment_files
+  output_file: output/deployment_info.txt
 
 react_conversion_task:
   description: >
-    Convert the Gradio UI to a modern ReactJS application while maintaining all the same functionality.
-    Create a complete ReactJS project structure with package.json, all necessary React components, proper state management,
-    and integration with the backend module {module_name}.
-    The React app should be production-ready and deployable.
+    Convert the Gradio UI to a modern ReactJS application AND create a complete runnable React app directory.
+    IMPORTANT: Create the complete directory structure with all files ready to run:
+    - Create package.json file with all dependencies
+    - Create src/index.js file
+    - Create src/App.jsx file
+    - Create src/components/AccountManagement.jsx file
+    - Create src/components/Trading.jsx file
+    - Create src/components/Portfolio.jsx file
+    - Create src/api/backend.js file
+    - Create a setup script or instructions to run npm install and npm start
+    The app should be in output/react_app/ directory and be immediately runnable with 'npm install && npm start'.
+    Write Python script to create all these files in the proper directory structure.
   expected_output: >
-    A complete ReactJS application with all files including package.json, React components, and proper integration with the backend.
+    A complete runnable React app in output/react_app/ directory with all necessary files. Instructions to run: cd output/react_app && npm install && npm start
   agent: react_engineer
   context:
     - frontend_task
-  output_file: output/react_app
+  output_file: output/react_app_ready.txt

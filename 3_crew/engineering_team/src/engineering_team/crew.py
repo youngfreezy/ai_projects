@@ -51,6 +51,10 @@ class EngineeringTeam():
         return Agent(
             config=self.agents_config['deployment_engineer'],
             verbose=True,
+            allow_code_execution=True,
+            code_execution_mode="safe",
+            max_execution_time=500,
+            max_retry_limit=3
         )
     
     @agent
@@ -58,6 +62,10 @@ class EngineeringTeam():
         return Agent(
             config=self.agents_config['react_engineer'],
             verbose=True,
+            allow_code_execution=True,
+            code_execution_mode="safe",
+            max_execution_time=500,
+            max_retry_limit=3
         )
 
     @task

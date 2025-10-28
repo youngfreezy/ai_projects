@@ -1,6 +1,10 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from huggingface_hub import HfApi, create_repo
+
+# Get the directory where this script is located
+script_dir = Path(__file__).parent.absolute()
 
 # Load environment variables
 load_dotenv()
@@ -26,8 +30,11 @@ except Exception as e:
 
 # Upload files
 try:
+    app_py_path = script_dir / "app.py"
+    accounts_py_path = script_dir / "accounts.py"
+    
     api.upload_file(
-        path_or_fileobj="app.py",
+        path_or_fileobj=str(app_py_path),
         path_in_repo="app.py",
         repo_id=repo_id,
         repo_type="space",
@@ -36,7 +43,7 @@ try:
     print("✓ Uploaded app.py")
     
     api.upload_file(
-        path_or_fileobj="accounts.py",
+        path_or_fileobj=str(accounts_py_path),
         path_in_repo="accounts.py",
         repo_id=repo_id,
         repo_type="space",

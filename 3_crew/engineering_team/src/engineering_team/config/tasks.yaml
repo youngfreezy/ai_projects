@@ -48,3 +48,28 @@ test_task:
   context:
     - code_task
   output_file: output/test_{module_name}
+
+deployment_task:
+  description: >
+    Create all necessary files for deploying the Gradio app to Hugging Face Spaces.
+    This includes: requirements.txt, README.md, app.py deployment wrapper, and any other configuration files needed.
+    The deployment should allow the app to run on Hugging Face Spaces after successful local testing with 'uv run app.py'.
+  expected_output: >
+    All deployment files needed for Hugging Face Spaces including requirements.txt, README.md, and app.py wrapper.
+  agent: deployment_engineer
+  context:
+    - frontend_task
+  output_file: output/deployment_files
+
+react_conversion_task:
+  description: >
+    Convert the Gradio UI to a modern ReactJS application while maintaining all the same functionality.
+    Create a complete ReactJS project structure with package.json, all necessary React components, proper state management,
+    and integration with the backend module {module_name}.
+    The React app should be production-ready and deployable.
+  expected_output: >
+    A complete ReactJS application with all files including package.json, React components, and proper integration with the backend.
+  agent: react_engineer
+  context:
+    - frontend_task
+  output_file: output/react_app

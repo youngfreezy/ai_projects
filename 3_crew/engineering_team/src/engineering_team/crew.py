@@ -45,6 +45,20 @@ class EngineeringTeam():
             max_execution_time=500, 
             max_retry_limit=3 
         )
+    
+    @agent
+    def deployment_engineer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['deployment_engineer'],
+            verbose=True,
+        )
+    
+    @agent
+    def react_engineer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['react_engineer'],
+            verbose=True,
+        )
 
     @task
     def design_task(self) -> Task:
@@ -69,6 +83,18 @@ class EngineeringTeam():
         return Task(
             config=self.tasks_config['test_task'],
         )   
+    
+    @task
+    def deployment_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['deployment_task'],
+        )
+    
+    @task
+    def react_conversion_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['react_conversion_task'],
+        )
 
     @crew
     def crew(self) -> Crew:

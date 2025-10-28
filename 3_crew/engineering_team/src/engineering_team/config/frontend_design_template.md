@@ -131,17 +131,26 @@ output/react_app/
 
 #### src/store/slices/accountSlice.js
 - Import createSlice from @reduxjs/toolkit
-- Initial state: { user_id: null, balance: 0, holdings: {}, transactions: [], portfolioValue: 0, profitOrLoss: 0 }
+- Import get_share_price helper function or prices mock data
+- Initial state: { 
+    user_id: null, 
+    balance: 0, 
+    holdings: {}, 
+    transactions: [], 
+    portfolioValue: 0, 
+    profitOrLoss: 0,
+    initialDeposit: 0
+  }
 - Reducers:
-  - createAccount: Sets user data and initial balance
+  - createAccount: Sets user_id and initial balance/initialDeposit
   - deposit: Adds to balance, adds transaction
-  - withdraw: Subtracts from balance, adds transaction
-  - buyShares: Calculates cost, updates balance and holdings, adds transaction
-  - sellShares: Calculates revenue, updates balance and holdings, adds transaction
-  - calculatePortfolioValue: Sums balance and holdings value
-  - calculateProfitOrLoss: Portfolio value minus initial deposit
-- Thunks for async operations if needed
-- Selectors for computed values
+  - withdraw: Subtracts from balance if sufficient funds, adds transaction
+  - buyShares: Calculates cost using get_share_price(symbol), updates balance and holdings
+  - sellShares: Calculates revenue using get_share_price(symbol), updates holdings and balance
+  - updatePortfolioValue: Calculates current portfolio value
+  - updateProfitOrLoss: Calculates profit/loss from initial deposit
+- Export: accountSlice.actions and accountSlice.reducer
+- Includes helper functions for get_share_price(symbol) mock data
 
 ### API Integration
 

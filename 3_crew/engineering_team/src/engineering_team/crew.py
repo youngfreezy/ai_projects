@@ -24,7 +24,7 @@ class EngineeringTeam():
             verbose=True,
             allow_code_execution=True,
             code_execution_mode="safe",  # Uses Docker for safety
-            max_execution_time=500, 
+            max_execution_time=10000,  # Increased for API server creation and testing
             max_retry_limit=3 
         )
     

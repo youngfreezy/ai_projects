@@ -58,8 +58,16 @@ frontend_task:
     9. Create src/components/Trading.jsx using Bootstrap Form/Button components
     10. Create src/components/Reports.jsx using Bootstrap layout components
     11. Create src/components/AccountInfo.jsx and OperationResult.jsx
-    12. Create src/store/index.js with Redux store configuration
-    13. Create src/store/slices/accountSlice.js with ALL reducers (createAccount, deposit, withdraw, buyShares, sellShares)
+    12. Create src/store/index.js with Redux store configuration using configureStore
+    13. Create src/store/slices/accountSlice.js with ALL reducers including:
+        - createAccount (sets user_id, balance, initialDeposit)
+        - deposit (adds to balance, records transaction)
+        - withdraw (subtracts from balance if sufficient, records transaction)
+        - buyShares (uses get_share_price, updates balance and holdings)
+        - sellShares (uses get_share_price, updates holdings and balance)
+        - updatePortfolioValue (calculates total portfolio value)
+        - updateProfitOrLoss (calculates profit/loss from initial deposit)
+        - Initial state must include: user_id, balance, holdings, transactions, portfolioValue, profitOrLoss, initialDeposit
     14. Create src/api/backend.js with axios client pointing to: https://huggingface.co/spaces/fareezaiahmed/trading-app-api
     15. Verify all files exist and run: npm install && npm run build
   expected_output: >

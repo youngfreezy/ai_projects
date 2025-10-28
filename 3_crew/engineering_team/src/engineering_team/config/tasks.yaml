@@ -24,18 +24,18 @@ code_task:
 
 frontend_task:
   description: >
-    Write a gradio UI in a module app.py that demonstrates the given backend class in {module_name}.
-    Assume there is only 1 user, and keep the UI very simple indeed - just a prototype or demo.
+    Write a ReactJS/Redux UI that demonstrates the given backend class in {module_name}.
+    Create a complete React app with all files in output/react_app/ directory.
+    The React app should use a REST API to interact with the backend {module_name} module.
     Here are the requirements: {requirements}
   expected_output: >
-    A gradio UI in module app.py that demonstrates the given backend class.
-    The file should be ready so that it can be run as-is, in the same directory as the backend module, and it should import the backend class from {module_name}.
-    IMPORTANT: Output ONLY the raw Python code without any markdown formatting, code block delimiters, or backticks.
-    The output should be valid Python code that can be directly saved to a file and executed.
+    A complete ReactJS app in output/react_app/ with src/, public/, package.json, and all necessary files.
+    The app should be buildable and deployable as static files to Hugging Face Spaces.
+    IMPORTANT: Output ONLY the raw code without any markdown formatting, code block delimiters, or backticks.
   agent: frontend_engineer
   context:
     - code_task
-  output_file: output/app.py
+  output_file: output/react_app
 
 test_task:
   description: >
@@ -49,71 +49,4 @@ test_task:
     - code_task
   output_file: output/test_{module_name}
 
-gradio_deployment_task:
-  description: >
-    ACTUALLY DEPLOY the Gradio app to Hugging Face Spaces (do not just create files).
-    Steps:
-    1. Read authentication secrets from the .env file in the project root (HF_TOKEN, etc.) using load_dotenv()
-    2. Create all necessary files in output/deployment_files/: requirements.txt, README.md, app.py, accounts.py
-    3. ACTUALLY EXECUTE the deployment using huggingface_hub library:
-       - Create a new Space called "trading-app-gradio"
-       - Upload all files from output/deployment_files/ to the Space
-       - Commit the changes
-    4. CRITICAL: Return the ACTUAL deployed URL in this format: "DEPLOYED: https://huggingface.co/spaces/[your-username]/trading-app-gradio"
-    IMPORTANT: 
-    - You MUST actually deploy, not just create deployment files
-    - The URL must be the actual live URL after deployment
-    - Use Python code execution to perform the actual deployment
-  expected_output: >
-    ACTUAL deployed URL: "DEPLOYED: https://huggingface.co/spaces/[username]/trading-app-gradio"
-  agent: deployment_engineer
-  context:
-    - frontend_task
-  output_file: output/gradio_deployment_info.txt
 
-react_conversion_task:
-  description: >
-    Convert the Gradio UI to a modern ReactJS application AND create a complete runnable React app directory.
-    IMPORTANT: Create the complete directory structure with all files ready to run:
-    - Create package.json file with all dependencies
-    - Create src/index.js file
-    - Create src/App.jsx file
-    - Create src/components/AccountManagement.jsx file
-    - Create src/components/Trading.jsx file
-    - Create src/components/Portfolio.jsx file
-    - Create src/api/backend.js file
-    - Create a setup script or instructions to run npm install and npm start
-    The app should be in output/react_app/ directory and be immediately runnable with 'npm install && npm start'.
-    Write Python script to create all these files in the proper directory structure.
-  expected_output: >
-    A complete runnable React app in output/react_app/ directory with all necessary files. Instructions to run: cd output/react_app && npm install && npm start
-  agent: react_engineer
-  context:
-    - frontend_task
-  output_file: output/react_app_ready.txt
-
-react_deployment_task:
-  description: >
-    Deploy the ReactJS app to Hugging Face Spaces as a Static Space.
-    Follow the official Hugging Face guide for deploying React apps (https://huggingface.co/docs/transformers.js/en/tutorials/react, Step 5).
-    Steps:
-    1. Read authentication secrets from the .env file in the project root (HF_TOKEN, etc.)
-    2. Create a complete React app in output/react_app/ directory with all files
-    3. Build the React app (cd output/react_app && npm install && npm run build)
-    4. Use the huggingface_hub library to create a new Static Space called "trading-app-react"
-    5. Upload files from the dist folder (this is Vite's build output, not React's build folder):
-       - Upload index.html from the dist folder
-       - Upload the public/ folder from the dist folder
-       - Upload all other files from the dist folder
-    6. Commit changes to main branch
-    7. Return the deployed URL (https://huggingface.co/spaces/[username]/trading-app-react)
-    IMPORTANT: 
-    - Load environment variables from .env file before deploying. Use load_dotenv() from python-dotenv.
-    - For Vite projects, the build output is in the dist/ folder, not build/
-    - Follow the exact steps from https://huggingface.co/docs/transformers.js/en/tutorials/react (Step 5: Build and deploy)
-  expected_output: >
-    Deployment confirmation and the live URL: https://huggingface.co/spaces/[username]/trading-app-react
-  agent: deployment_engineer
-  context:
-    - react_conversion_task
-  output_file: output/react_deployment_info.txt

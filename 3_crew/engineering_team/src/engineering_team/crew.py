@@ -33,6 +33,10 @@ class EngineeringTeam():
         return Agent(
             config=self.agents_config['frontend_engineer'],
             verbose=True,
+            allow_code_execution=True,
+            code_execution_mode="safe",  # Uses Docker for safety
+            max_execution_time=10000,
+            max_retry_limit=3
         )
     
     @agent
@@ -44,28 +48,6 @@ class EngineeringTeam():
             code_execution_mode="safe",  # Uses Docker for safety
             max_execution_time=500, 
             max_retry_limit=3 
-        )
-    
-    @agent
-    def deployment_engineer(self) -> Agent:
-        return Agent(
-            config=self.agents_config['deployment_engineer'],
-            verbose=True,
-            allow_code_execution=True,
-            code_execution_mode="safe",
-            max_execution_time=500,
-            max_retry_limit=3
-        )
-    
-    @agent
-    def react_engineer(self) -> Agent:
-        return Agent(
-            config=self.agents_config['react_engineer'],
-            verbose=True,
-            allow_code_execution=True,
-            code_execution_mode="safe",
-            max_execution_time=500,
-            max_retry_limit=3
         )
 
     @task
@@ -92,23 +74,6 @@ class EngineeringTeam():
             config=self.tasks_config['test_task'],
         )   
     
-    @task
-    def gradio_deployment_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['gradio_deployment_task'],
-        )
-    
-    @task
-    def react_conversion_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['react_conversion_task'],
-        )
-    
-    @task
-    def react_deployment_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['react_deployment_task'],
-        )
 
     @crew
     def crew(self) -> Crew:

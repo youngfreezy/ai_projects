@@ -71,6 +71,27 @@ gradio_deployment_task:
     - frontend_task
   output_file: output/gradio_deployment_info.txt
 
+react_conversion_task:
+  description: >
+    Convert the Gradio UI to a modern ReactJS application AND create a complete runnable React app directory.
+    IMPORTANT: Create the complete directory structure with all files ready to run:
+    - Create package.json file with all dependencies
+    - Create src/index.js file
+    - Create src/App.jsx file
+    - Create src/components/AccountManagement.jsx file
+    - Create src/components/Trading.jsx file
+    - Create src/components/Portfolio.jsx file
+    - Create src/api/backend.js file
+    - Create a setup script or instructions to run npm install and npm start
+    The app should be in output/react_app/ directory and be immediately runnable with 'npm install && npm start'.
+    Write Python script to create all these files in the proper directory structure.
+  expected_output: >
+    A complete runnable React app in output/react_app/ directory with all necessary files. Instructions to run: cd output/react_app && npm install && npm start
+  agent: react_engineer
+  context:
+    - frontend_task
+  output_file: output/react_app_ready.txt
+
 react_deployment_task:
   description: >
     Deploy the ReactJS app to Hugging Face Spaces as a Static Space.
@@ -96,24 +117,3 @@ react_deployment_task:
   context:
     - react_conversion_task
   output_file: output/react_deployment_info.txt
-
-react_conversion_task:
-  description: >
-    Convert the Gradio UI to a modern ReactJS application AND create a complete runnable React app directory.
-    IMPORTANT: Create the complete directory structure with all files ready to run:
-    - Create package.json file with all dependencies
-    - Create src/index.js file
-    - Create src/App.jsx file
-    - Create src/components/AccountManagement.jsx file
-    - Create src/components/Trading.jsx file
-    - Create src/components/Portfolio.jsx file
-    - Create src/api/backend.js file
-    - Create a setup script or instructions to run npm install and npm start
-    The app should be in output/react_app/ directory and be immediately runnable with 'npm install && npm start'.
-    Write Python script to create all these files in the proper directory structure.
-  expected_output: >
-    A complete runnable React app in output/react_app/ directory with all necessary files. Instructions to run: cd output/react_app && npm install && npm start
-  agent: react_engineer
-  context:
-    - frontend_task
-  output_file: output/react_app_ready.txt

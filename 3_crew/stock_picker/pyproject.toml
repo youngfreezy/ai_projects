@@ -5,7 +5,23 @@ description = "stock_picker using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.13"
 dependencies = [
-    "crewai[tools]>=0.108.0,<1.0.0"
+    # CrewAI with tools (brings in lancedb → pyarrow, etc.)
+    "crewai[tools]>=0.108.0,<1.0.0",
+    "numpy<2",
+
+    # --- Platform-specific pins to avoid install failures on macOS Intel ---
+    # ONNX Runtime: 1.21.0 doesn't provide a wheel for macosx_10_16_x86_64.
+    # Use 1.16.3 on Intel macOS; keep 1.21.0 elsewhere.
+    "onnxruntime==1.16.3 ; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+    "onnxruntime==1.21.0 ; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "onnxruntime==1.21.0 ; sys_platform != 'darwin'",
+
+    # PyArrow: pick a widely available wheel on Intel macOS to avoid source builds.
+    "pyarrow==16.1.0 ; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+
+    # Replace yanked versions seen in the logs.
+    "multidict==6.0.5",
+    "pypdfium2==4.30.0",
 ]
 
 [project.scripts]

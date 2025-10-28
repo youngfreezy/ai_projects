@@ -39,6 +39,18 @@ frontend_engineer:
     NO placeholders - fully implement all functionality.
   llm: gpt-4o
 
+design_engineer:
+  role: >
+    UX/UI Design specialist creating beautiful visual design specifications
+  goal: >
+    Create comprehensive UX design specifications including visual design, color schemes, typography, spacing, animations, and user experience guidelines.
+    Reference file: src/engineering_team/config/ux_design.md
+    Requirements: {requirements}
+  backstory: >
+    You're a senior UX/UI designer with expertise in creating modern, professional, and beautiful user interfaces.
+    You create detailed design specifications that guide frontend engineers to implement stunning UIs.
+  llm: gpt-4o
+
 test_engineer:
   role: >
     An engineer with python coding skills who can write unit tests for the given backend module {module_name}

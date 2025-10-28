@@ -49,6 +49,13 @@ class EngineeringTeam():
             max_execution_time=500, 
             max_retry_limit=3 
         )
+    
+    @agent
+    def design_engineer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['design_engineer'],
+            verbose=True,
+        )
 
     @task
     def design_task(self) -> Task:
@@ -61,13 +68,19 @@ class EngineeringTeam():
         return Task(
             config=self.tasks_config['code_task'],
         )
+    
+    @task
+    def ux_design_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['ux_design_task']
+        )
 
     @task
     def frontend_task(self) -> Task:
         return Task(
             config=self.tasks_config['frontend_task'],
         )
-
+    
     @task
     def backend_api_task(self) -> Task:
         return Task(
@@ -78,7 +91,19 @@ class EngineeringTeam():
     def test_task(self) -> Task:
         return Task(
             config=self.tasks_config['test_task'],
-        )   
+        )
+    
+    @task
+    def test_api_server_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['test_api_server_task'],
+        )
+    
+    @task
+    def test_frontend_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['test_frontend_task'],
+        )
     
 
     @crew

@@ -22,40 +22,50 @@ code_task:
     - design_task
   output_file: output/{module_name}
 
+ux_design_task:
+  description: >
+    Prepare a UX design specification focusing on visual design, color schemes, user experience, and styling guidelines.
+    Design must include modern professional styling with gradient backgrounds, card layouts, responsive design, and beautiful UI/UX.
+    Here are the requirements: {requirements}
+    Reference design template: src/engineering_team/config/ux_design.md
+    IMPORTANT: Only output the visual design specifications in markdown format, focusing on colors, typography, spacing, animations, and overall aesthetic.
+  expected_output: >
+    A UX design specification focused on visual design, colors, typography, and user experience guidelines.
+  agent: design_engineer
+  output_file: output/{module_name}_ux_design.md
+
 frontend_task:
   description: >
-    Create ReactJS/Redux app for {module_name} in output/react_app/ with full functionality.
+    Create a ReactJS/Redux app implementing the trading simulation platform.
+    Here are the requirements: {requirements}
     
-    REQUIREMENTS: {requirements}
+    CRITICAL: Follow the EXACT structure and patterns from src/engineering_team/config/frontend_design_template.md
+    - Components: AccountManagement.jsx, Trading.jsx, Reports.jsx, AccountInfo.jsx, OperationResult.jsx
+    - Redux: src/store/slices/accountSlice.js with createSlice from @reduxjs/toolkit
+    - API: src/api/backend.js with baseURL pointing to https://huggingface.co/spaces/fareezaiahmed/trading-app-api
+    - Bootstrap: Use Container, Row, Col, Form, Button, Tabs, Tab from react-bootstrap
+    - Styling: Follow App.css patterns from the template
     
-    Structure:
-    - package.json: react ^18.2.0, react-dom ^18.2.0, react-scripts 5.0.1, redux ^4.2.1, react-redux ^8.1.3, @reduxjs/toolkit ^1.9.7, axios ^1.6.2
-    - src/index.js: React 18 createRoot API, Redux Provider
-    - src/App.jsx: 3 tabs (Account Management, Trading, Reports) matching Gradio exactly
-    - src/components/: AccountManagement, Trading, Reports, AccountInfo, OperationResult
-    - src/store/: Redux store with account slice (createSlice, configureStore)
-    - src/api/backend.js: axios client connecting to https://huggingface.co/spaces/fareezaiahmed/trading-app-api
-    - public/index.html: MUST include full HTML structure with DOCTYPE, html, head, body, and div id="root" (NOT empty!)
-    
-    CRITICAL:
-    - Use Code Interpreter to create ALL files
-    - NO placeholders - fully implement all reducers (createAccount, deposit, withdraw, buyShares, sellShares)
-    - Test with npm install && npm run build before completing task
+    CRITICAL IMPLEMENTATION STEPS:
+    1. Use Code Interpreter to create directory: os.makedirs('output/react_app', exist_ok=True)
+    2. Create public/index.html with full HTML structure and div id="root"
+    3. Create package.json with ALL dependencies (React, Redux, Bootstrap, axios)
+    4. Create src/index.js with Bootstrap CSS imports and React 18 createRoot
+    5. Create src/index.css with global styles and gradient background
+    6. Create src/App.jsx with Bootstrap Tabs, title header, and tab components
+    7. Create src/App.css with ALL styling from design spec
+    8. Create src/components/AccountManagement.jsx using Bootstrap Form/Button components
+    9. Create src/components/Trading.jsx using Bootstrap Form/Button components
+    10. Create src/components/Reports.jsx using Bootstrap layout components
+    11. Create src/components/AccountInfo.jsx and OperationResult.jsx
+    12. Create src/store/index.js with Redux store configuration
+    13. Create src/store/slices/accountSlice.js with ALL reducers (createAccount, deposit, withdraw, buyShares, sellShares)
+    14. Create src/api/backend.js with axios client pointing to: https://huggingface.co/spaces/fareezaiahmed/trading-app-api
+    15. Verify all files exist and run: npm install && npm run build
   expected_output: >
-    A complete ReactJS/Redux app EXACTLY matching the Gradio implementation:
-    - public/index.html must NOT be empty - must contain full HTML structure with div id="root"
-    - 3 Tabs: Account Management, Trading, Reports (matching Gradio UI)
-    - Tab 1: Create account, deposit, withdraw buttons with real-time feedback
-    - Tab 2: Buy/Sell shares with real-time feedback
-    - Tab 3: Portfolio value, profit/loss, holdings, transaction history buttons
-    - Account Information display showing current state
-    - Operation Result display for immediate user feedback
-    - All functionality matches Gradio app exactly
-    - package.json with redux, react-redux, @reduxjs/toolkit, axios
-    - src/store/ with Redux store and slices
-    - All components using Redux hooks for business logic
-    - App must be buildable with 'npm install && npm run build'
-    - App must be deployable as static files
+    A complete ReactJS/Redux app that implements the frontend design and achieves the requirements.
+    IMPORTANT: Output ALL code files, styles, and configuration following the frontend design specification exactly.
+    All files must be valid and the app must build successfully with 'npm install && npm run build'.
   agent: frontend_engineer
   context:
     - code_task
@@ -63,100 +73,31 @@ frontend_task:
 
 backend_api_task:
   description: >
-    Create a Flask backend API server for the React app.
+    Create a Flask backend API server for the trading simulation platform.
+    Here are the requirements: {requirements}
     
-    CRITICAL: Use Code Interpreter to create ALL files in output/api_server/ directory:
+    CRITICAL: Follow the EXACT structure and patterns from src/engineering_team/config/api_server_design_template.md
+    - Endpoints: POST /api/create_account, POST /api/deposit, POST /api/withdraw, POST /api/buy, POST /api/sell, GET /api/portfolio
+    - Files: app.py, requirements.txt, README.md, deploy_to_hf.py
+    - Use absolute paths in deploy_to_hf.py (Path(__file__).parent.absolute())
+    - baseURL in app.py must connect to Hugging Face space
     
-    STEP 1: Create directory structure using Code Interpreter:
-    Run this Python code: os.makedirs('output/api_server', exist_ok=True)
-    This MUST be executed in Code Interpreter to create the directory
+    CRITICAL IMPLEMENTATION STEPS:
+    1. Use Code Interpreter to create directory: os.makedirs('output/api_server', exist_ok=True)
+    2. Create app.py with ALL 6 endpoints implemented (create_account, deposit, withdraw, buy, sell, portfolio)
+    3. Create requirements.txt with all dependencies
+    4. Create README.md with Hugging Face Space YAML frontmatter
+    5. Create deploy_to_hf.py using absolute paths (Path(__file__).parent.absolute())
+    6. Verify all files exist using os.path.exists() and list directory
+    7. Test app.py imports: import importlib.util and verify syntax
+    8. Test deploy_to_hf.py: verify it compiles without errors
     
-    STEP 2: Create app.py file using Code Interpreter:
-    Write to output/api_server/app.py with ALL endpoints implemented:
-    - Use Flask with CORS enabled (from flask_cors import CORS)
-    - Import the {module_name} module for business logic
-    - Implement ALL endpoints:
-      • POST /api/create_account - creates account, returns JSON
-      • POST /api/deposit - deposits funds, returns JSON  
-      • POST /api/withdraw - withdraws funds, returns JSON
-      • POST /api/buy - buys shares, returns JSON
-      • POST /api/sell - sells shares, returns JSON
-      • GET /api/portfolio - returns portfolio data as JSON
-    - Enable CORS to allow React app to call the API
-    - Use jsonify for JSON responses
-    - Handle errors properly with try/except
-    - NO placeholder endpoints - implement them ALL
-    
-    STEP 3: Create requirements.txt:
-    - flask
-    - flask-cors
-    - python-dotenv
-    - huggingface_hub
-    
-    STEP 4: Create README.md for Hugging Face Space:
-    - Include YAML frontmatter for HF Space
-    - Set space type to 'gradio' 
-    - Include app_file: app.py
-    - Add description of the API
-    - Note: This will be deployed as a Gradio app that serves the Flask API
-    
-    STEP 5: Create deploy_to_hf.py deployment script:
-    - Load HF_TOKEN from .env using load_dotenv()
-    - Use HfApi and create_repo, upload_file from huggingface_hub
-    - Create space using create_repo with repo_id, repo_type='space', space_sdk='gradio'
-    - Space name: fareezaiahmed/trading-app-api
-    - Upload app.py (with Flask app that Gradio will host), requirements.txt, README.md
-    - CRITICAL: Use create_repo NOT create_space (create_space doesn't exist in HfApi)
-    
-    CRITICAL: Execute this Python code in Code Interpreter to create ALL files:
-    
-    Python code template for deploy_to_hf.py deployment script content:
-    from dotenv import load_dotenv
-    from huggingface_hub import HfApi, create_repo, upload_file
-    import os
-    
-    load_dotenv()
-    HF_TOKEN = os.getenv('HF_TOKEN')
-    
-    api = HfApi(token=HF_TOKEN)
-    repo_id = 'fareezaiahmed/trading-app-api'
-    
-    create_repo(repo_id=repo_id, repo_type='space', space_sdk='gradio', exist_ok=True, token=HF_TOKEN)
-    
-    upload_file(path_or_fileobj='app.py', path_in_repo='app.py', repo_id=repo_id, token=HF_TOKEN)
-    upload_file(path_or_fileobj='requirements.txt', path_in_repo='requirements.txt', repo_id=repo_id, token=HF_TOKEN)
-    upload_file(path_or_fileobj='README.md', path_in_repo='README.md', repo_id=repo_id, token=HF_TOKEN)
-    
-    CRITICAL: Use create_repo NOT create_space (create_space method doesn't exist in HfApi)
-    Use exact parameters: create_repo(repo_id, repo_type='space', space_sdk='gradio', exist_ok=True, token=HF_TOKEN)
-    
-    Use Code Interpreter to execute file creation operations.
-    IMPORTANT: Output ONLY raw Python code without any markdown.
-    
-    STEP 6: VERIFY FILES CREATED:
-    After creating all files, verify the directory exists:
-    - Check os.path.exists('output/api_server')
-    - List files in directory to confirm app.py, requirements.txt, README.md, deploy_to_hf.py exist
-    - Only mark task complete when all 4 files are confirmed present
-    
-    STEP 7: VERIFY THE CODE COMPILES AND RUNS:
-    After creating all files, verify the code compiles and runs without errors:
-    1. Test deploy_to_hf.py compiles:
-       - Use importlib.util to load and validate the script
-       - Check for syntax errors
-    2. Test app.py imports correctly:
-       - Change directory to output/api_server
-       - Try to import app: from app import app
-       - This verifies all imports (Flask, CORS, accounts module) work correctly
-    3. If any import or syntax errors occur, FIX THEM before completing task
-    4. Only mark task complete when all Python files compile successfully
-    CRITICAL: All Python files must compile without errors or task is incomplete
-    
+    Use Code Interpreter to create ALL files in output/api_server/ directory as specified in the design.
   expected_output: >
-    A complete Flask backend API server in output/api_server/ directory with ALL files created.
-    All 6 API endpoints must be fully implemented with NO placeholders.
-    Files verified: app.py, requirements.txt, README.md, deploy_to_hf.py - this will deploy the backend API as a Gradio app that serves the Flask API at https://huggingface.co/spaces/fareezaiahmed/trading-app-api
-    Directory output/api_server/ must exist and be readable
+    A complete Flask backend API server that implements the API server design and achieves the requirements.
+    IMPORTANT: Output ALL code files following the design specification exactly.
+    All files must be valid and the API must compile and import successfully.
+    ALL 4 files must be created and verified: app.py, requirements.txt, README.md, deploy_to_hf.py
   agent: backend_engineer
   context:
     - code_task
@@ -164,14 +105,69 @@ backend_api_task:
 
 test_task:
   description: >
-    Write unit tests for the given backend module {module_name} and create a test_{module_name} in the same directory as the backend module.
-  expected_output: >
-    A test_{module_name} module that tests the given backend module.
+    Write comprehensive unit tests for the backend module {module_name} and create test_{module_name} in output/ directory.
+    Test all methods: createAccount, deposit, withdraw, buyShares, sellShares, calculatePortfolioValue, calculateProfitOrLoss.
+    Verify error handling for insufficient funds, negative amounts, and invalid inputs.
     IMPORTANT: Output ONLY the raw Python code without any markdown formatting, code block delimiters, or backticks.
-    The output should be valid Python code that can be directly saved to a file and executed.
+    The output should be valid Python code that can be directly saved to a file and executed with pytest.
+  expected_output: >
+    A complete test module that thoroughly tests all functionality of the backend module with at least 80% code coverage.
+    Test file must be directly executable and all tests must pass.
   agent: test_engineer
   context:
     - code_task
   output_file: output/test_{module_name}
+
+test_api_server_task:
+  description: >
+    Write integration tests for the Flask API server to verify all endpoints work correctly.
+    Test ALL 6 API endpoints: POST /api/create_account, POST /api/deposit, POST /api/withdraw, POST /api/buy, POST /api/sell, GET /api/portfolio
+    Verify response formats, error handling, and CORS headers.
+    Use pytest and requests library to test the running Flask app.
+    Create test_api_server.py in output/ directory.
+    
+    CRITICAL IMPLEMENTATION STEPS:
+    1. Import necessary libraries: pytest, requests, flask
+    2. Create test fixtures for Flask test client
+    3. Write tests for each endpoint with valid and invalid inputs
+    4. Verify JSON responses, status codes, and error messages
+    5. Test CORS headers are present
+    6. Run tests and ensure all pass
+    
+    IMPORTANT: Output ONLY the raw Python code without any markdown formatting.
+  expected_output: >
+    A complete test_api_server.py file that tests all API endpoints and verifies responses, error handling, and CORS configuration.
+    All tests must pass and provide at least 80% code coverage of the API endpoints.
+  agent: test_engineer
+  context:
+    - code_task
+    - backend_api_task
+  output_file: output/test_api_server.py
+
+test_frontend_task:
+  description: >
+    Write integration tests for the React/Redux frontend to verify components render and Redux state management works correctly.
+    Test Redux reducers, component rendering, API integration, and user interactions.
+    Use React Testing Library and Jest.
+    Create test files alongside components in output/react_app/src/.
+    
+    CRITICAL IMPLEMENTATION STEPS:
+    1. Install testing dependencies: @testing-library/react, @testing-library/jest-dom, @reduxjs/toolkit testing utilities
+    2. Create test files: AccountManagement.test.jsx, Trading.test.jsx, Reports.test.jsx, accountSlice.test.js
+    3. Test Redux reducers: verify state updates for createAccount, deposit, withdraw, buyShares, sellShares
+    4. Test component rendering: verify components render without errors
+    5. Test user interactions: form submissions, button clicks
+    6. Test API integration: verify axios calls to backend
+    7. Run tests with npm test and ensure all pass
+    
+    IMPORTANT: Output ONLY the raw test code without any markdown formatting.
+  expected_output: >
+    Complete test suite for React components and Redux state management with at least 70% code coverage.
+    All tests must pass and verify Redux actions, reducers, component rendering, and API integration.
+  agent: frontend_engineer
+  context:
+    - code_task
+    - frontend_task
+  output_file: output/test_frontend_created.txt
 
 

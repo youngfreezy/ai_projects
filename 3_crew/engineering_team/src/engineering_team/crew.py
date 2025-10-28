@@ -93,15 +93,21 @@ class EngineeringTeam():
         )   
     
     @task
-    def deployment_task(self) -> Task:
+    def gradio_deployment_task(self) -> Task:
         return Task(
-            config=self.tasks_config['deployment_task'],
+            config=self.tasks_config['gradio_deployment_task'],
         )
     
     @task
     def react_conversion_task(self) -> Task:
         return Task(
             config=self.tasks_config['react_conversion_task'],
+        )
+    
+    @task
+    def react_deployment_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['react_deployment_task'],
         )
 
     @crew

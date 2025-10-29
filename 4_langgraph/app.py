@@ -28,7 +28,7 @@ def free_resources(sidekick):
         print(f"Exception during cleanup: {e}")
 
 
-with gr.Blocks(title="Sidekick", theme=gr.themes.Default(primary_hue="emerald")) as ui:
+with gr.Blocks(title="Sidekick", theme=gr.themes.Default(primary_hue="emerald")) as demo:
     gr.Markdown("## Sidekick Personal Co-Worker")
     sidekick = gr.State(delete_callback=free_resources)
 
@@ -45,7 +45,7 @@ with gr.Blocks(title="Sidekick", theme=gr.themes.Default(primary_hue="emerald"))
         reset_button = gr.Button("Reset", variant="stop")
         go_button = gr.Button("Go!", variant="primary")
 
-    ui.load(setup, [], [sidekick])
+    demo.load(setup, [], [sidekick])
     message.submit(
         process_message, [sidekick, message, success_criteria, chatbot], [chatbot, sidekick]
     )
@@ -58,4 +58,6 @@ with gr.Blocks(title="Sidekick", theme=gr.themes.Default(primary_hue="emerald"))
     reset_button.click(reset, [], [message, success_criteria, chatbot, sidekick])
 
 
-ui.launch(inbrowser=True)
+# For local testing, uncomment the line below
+# if __name__ == "__main__":
+#     demo.launch()

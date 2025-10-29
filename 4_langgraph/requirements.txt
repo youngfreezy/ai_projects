@@ -1,0 +1,13 @@
+gradio>=4.0.0
+langchain-openai
+langchain-community
+langchain-experimental
+langgraph
+playwright
+pydantic
+python-dotenv
+requests
+typing-extensions
+
+# Install Playwright browsers (run this after deployment: playwright install chromium)
+

@@ -1,0 +1,9 @@
+gradio==5.49.1
+openai-agents==0.0.17
+openai>=1.40.0
+python-dotenv
+polygon
+pandas
+plotly
+
+

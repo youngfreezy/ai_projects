@@ -5,6 +5,8 @@ from trading_floor import names, lastnames, short_model_names
 import plotly.express as px
 from accounts import Account
 from database import read_log
+import asyncio
+import trading_floor
 
 mapper = {
     "trace": Color.WHITE,
@@ -181,10 +183,39 @@ def create_ui():
         with gr.Row():
             for trader_view in trader_views:
                 trader_view.make_ui()
+        # Controls to manage background engine
+        status = gr.Markdown()
+        with gr.Row():
+            start_btn = gr.Button("Start Engine", variant="primary")
+            stop_btn = gr.Button("Stop Engine", variant="stop")
+
+        engine_task = {"task": None}
+
+        async def start_engine():
+            if engine_task["task"] is None or engine_task["task"].done():
+                engine_task["task"] = asyncio.create_task(trading_floor.run_every_n_minutes())
+                return "Engine started."
+            return "Engine already running."
+
+        async def stop_engine():
+            if engine_task["task"] and not engine_task["task"].done():
+                engine_task["task"].cancel()
+                try:
+                    await engine_task["task"]
+                except asyncio.CancelledError:
+                    pass
+                engine_task["task"] = None
+                return "Engine stopped."
+            return "Engine is not running."
+
+        ui.load(start_engine, None, status)
+        start_btn.click(start_engine, None, status)
+        stop_btn.click(stop_engine, None, status)
 
     return ui
 
 
+demo = create_ui()
+
 if __name__ == "__main__":
-    ui = create_ui()
-    ui.launch(inbrowser=True)
+    demo.launch(inbrowser=True)

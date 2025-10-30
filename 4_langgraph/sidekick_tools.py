@@ -3,12 +3,19 @@ from langchain_community.agent_toolkits import PlayWrightBrowserToolkit
 from dotenv import load_dotenv
 import os
 import requests
-from langchain.tools import Tool
+from langchain_core.tools import Tool
 from langchain_community.agent_toolkits import FileManagementToolkit
 from langchain_community.tools.wikipedia.tool import WikipediaQueryRun
-from langchain_experimental.tools import PythonREPLTool
 from langchain_community.utilities import GoogleSerperAPIWrapper
 from langchain_community.utilities.wikipedia import WikipediaAPIWrapper
+
+# Try to import PythonREPLTool, but make it optional if there are compatibility issues
+try:
+    from langchain_experimental.tools import PythonREPLTool
+    PYTHON_REPL_AVAILABLE = True
+except ImportError:
+    PYTHON_REPL_AVAILABLE = False
+    print("Warning: PythonREPLTool not available, Python code execution will be disabled")
 
 
 
@@ -50,7 +57,12 @@ async def other_tools():
     wikipedia = WikipediaAPIWrapper()
     wiki_tool = WikipediaQueryRun(api_wrapper=wikipedia)
 
-    python_repl = PythonREPLTool()
+    tools = file_tools + [push_tool, tool_search, wiki_tool]
     
-    return file_tools + [push_tool, tool_search, python_repl,  wiki_tool]
+    # Only add PythonREPLTool if available
+    if PYTHON_REPL_AVAILABLE:
+        python_repl = PythonREPLTool()
+        tools.append(python_repl)
+    
+    return tools
 

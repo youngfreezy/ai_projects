@@ -133,7 +133,7 @@ class TraderView:
                     elem_classes=["dataframe-fix"],
                 )
 
-        timer = gr.Timer(value=120)
+        timer = gr.Timer(value=240)
         timer.tick(
             fn=self.refresh,
             inputs=[],
@@ -146,7 +146,7 @@ class TraderView:
             show_progress="hidden",
             queue=False,
         )
-        log_timer = gr.Timer(value=0.5)
+        log_timer = gr.Timer(value=3)
         log_timer.tick(
             fn=self.trader.get_logs,
             inputs=[self.log],

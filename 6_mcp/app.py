@@ -83,19 +83,16 @@ class Trader:
         return f"<div style='text-align: center;background-color:{color};'><span style='font-size:32px'>${portfolio_value:,.0f}</span><span style='font-size:24px'>&nbsp;&nbsp;&nbsp;{emoji}&nbsp;${pnl:,.0f}</span></div>"
 
     def get_logs(self, previous=None) -> str:
-        try:
-            logs = read_log(self.name, last_n=13)
-            response = ""
-            for log in logs:
-                timestamp, type, message = log
-                color = mapper.get(type, Color.WHITE).value
-                response += f"<span style='color:{color}'>{timestamp} : [{type}] {message}</span><br/>"
-            response = f"<div style='height:250px; overflow-y:auto;'>{response}</div>"
-            if response != previous:
-                return response
-            return gr.update()
-        except Exception:
-            return gr.update()
+        logs = read_log(self.name, last_n=13)
+        response = ""
+        for log in logs:
+            timestamp, type, message = log
+            color = mapper.get(type, Color.WHITE).value
+            response += f"<span style='color:{color}'>{timestamp} : [{type}] {message}</span><br/>"
+        response = f"<div style='height:250px; overflow-y:auto;'>{response}</div>"
+        if response != previous:
+            return response
+        return gr.update()
 
 
 class TraderView:
@@ -166,57 +163,47 @@ class TraderView:
         )
 
     def refresh(self):
-        try:
-            self.trader.reload()
-            # Compute new values
-            new_portfolio_html = self.trader.get_portfolio_value()
-            new_chart = self.trader.get_portfolio_value_chart()
-            new_holdings = self.trader.get_holdings_df()
-            new_transactions = self.trader.get_transactions_df()
+        self.trader.reload()
+        # Compute new values
+        new_portfolio_html = self.trader.get_portfolio_value()
+        new_chart = self.trader.get_portfolio_value_chart()
+        new_holdings = self.trader.get_holdings_df()
+        new_transactions = self.trader.get_transactions_df()
 
-            # Make dataframes serialization-safe
-            try:
-                new_holdings = new_holdings.fillna("").astype(str)
-                new_transactions = new_transactions.fillna("").astype(str)
-            except Exception:
-                pass
+        # Serialize for cheap equality checks
+        new_chart_json = new_chart.to_json() if hasattr(new_chart, "to_json") else str(new_chart)
+        new_holdings_json = new_holdings.to_json(orient="split")
+        new_transactions_json = new_transactions.to_json(orient="split")
 
-            # Serialize for cheap equality checks
-            new_chart_json = new_chart.to_json() if hasattr(new_chart, "to_json") else str(new_chart)
-            new_holdings_json = new_holdings.to_json(orient="split")
-            new_transactions_json = new_transactions.to_json(orient="split")
+        # Prepare outputs with skip-unchanged semantics
+        out_portfolio = (
+            new_portfolio_html
+            if new_portfolio_html != self._last_portfolio_value_html
+            else gr.update()
+        )
+        out_chart = (
+            new_chart
+            if new_chart_json != self._last_chart_json
+            else gr.update()
+        )
+        out_holdings = (
+            new_holdings
+            if new_holdings_json != self._last_holdings_json
+            else gr.update()
+        )
+        out_transactions = (
+            new_transactions
+            if new_transactions_json != self._last_transactions_json
+            else gr.update()
+        )
 
-            # Prepare outputs with skip-unchanged semantics
-            out_portfolio = (
-                new_portfolio_html
-                if new_portfolio_html != self._last_portfolio_value_html
-                else gr.update()
-            )
-            out_chart = (
-                new_chart
-                if new_chart_json != self._last_chart_json
-                else gr.update()
-            )
-            out_holdings = (
-                new_holdings
-                if new_holdings_json != self._last_holdings_json
-                else gr.update()
-            )
-            out_transactions = (
-                new_transactions
-                if new_transactions_json != self._last_transactions_json
-                else gr.update()
-            )
+        # Update caches
+        self._last_portfolio_value_html = new_portfolio_html
+        self._last_chart_json = new_chart_json
+        self._last_holdings_json = new_holdings_json
+        self._last_transactions_json = new_transactions_json
 
-            # Update caches
-            self._last_portfolio_value_html = new_portfolio_html
-            self._last_chart_json = new_chart_json
-            self._last_holdings_json = new_holdings_json
-            self._last_transactions_json = new_transactions_json
-
-            return (out_portfolio, out_chart, out_holdings, out_transactions)
-        except Exception:
-            return (gr.update(), gr.update(), gr.update(), gr.update())
+        return (out_portfolio, out_chart, out_holdings, out_transactions)
 
 
 # Main UI construction

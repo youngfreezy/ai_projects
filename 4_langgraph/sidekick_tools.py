@@ -61,7 +61,7 @@ async def other_tools():
     
     # Only add PythonREPLTool if available
     if PYTHON_REPL_AVAILABLE:
-        python_repl = PythonREPLTool()
+    python_repl = PythonREPLTool()
         tools.append(python_repl)
     
     return tools

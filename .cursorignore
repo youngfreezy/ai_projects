@@ -1,0 +1,53 @@
+# Virtual environments
+**/.venv/
+**/venv/
+**/env/
+**/.env/
+
+# Node modules
+**/node_modules/
+
+# Generated outputs
+**/output/
+**/example_output*/
+
+# Community contributions (optional - uncomment if not needed)
+# **/community_contributions/
+
+# Python cache
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+
+# Database files
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/*.sqlite
+
+# Build artifacts
+**/build/
+**/dist/
+**/*.egg-info/
+**/.eggs/
+
+# Large binaries and libraries
+**/*.so
+**/*.dylib
+**/*.dll
+
+# Lock files (optional - uncomment if not needed)
+# **/uv.lock
+# **/package-lock.json
+
+# IDE and editor files
+**/.idea/
+**/.vscode/
+**/.cursor/
+
+# OS files
+**/.DS_Store
+**/Thumbs.db
+
